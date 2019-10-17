@@ -16,3 +16,10 @@ int* Signals::getTrainSignal(int train) //function trains use to receive their s
 {
 	return &signals[train];
 }
+
+void Signals::resetTrainSignals()
+{
+	for (int i = 0; i < signals.size(); i++) {
+		signals[i] = 0;
+	}
+}

@@ -21,4 +21,5 @@ public:
 	Signals(int trains);
 	void setTrainSignal(int train, int signal);
 	int* getTrainSignal(int train);
+	void resetTrainSignals();
 };

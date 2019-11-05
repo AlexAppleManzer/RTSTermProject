@@ -2,6 +2,7 @@
 #include <thread>
 #include <assert.h>
 #include "Train.h"
+#include <iostream>
 
 Train::Train(double startX, double startY, double dx, double dy, Position* position, int* signal) {
     this -> x = startX;
@@ -39,6 +40,7 @@ void Train::incrementTrain() {
 	case 1: // Slow down? (yellow light)
 		break;
 	case 2: // STOP (red light)
+		std::cout << "I'm stopped" << std::endl;
 		break;
 	}
 

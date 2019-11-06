@@ -2,17 +2,18 @@
 #include <thread>
 #include <assert.h>
 #include "Train.h"
+#include <iostream>
 
 Train::Train(double startX, double startY, double dx, double dy, Position* position, int* signal) {
-    this -> x = startX;
-    this -> y = startY;
+	this->x = startX;
+	this->y = startY;
 	assert(this->dx < trainLength);
 	assert(this->dy < trainLength);
-    this -> dy = dy;
-    this -> dx = dx;
+	this->dy = dy;
+	this->dx = dx;
 	this->signal = signal;
-    this -> position = position;
-    this->position->x = x;
+	this->position = position;
+	this->position->x = x;
 	this->position->y = y;
 	this->position->dx = dx;
 	this->position->dy = dy;
@@ -39,6 +40,7 @@ void Train::incrementTrain() {
 	case 1: // Slow down? (yellow light)
 		break;
 	case 2: // STOP (red light)
+		std::cout << "I'm stopped" << std::endl;
 		break;
 	}
 
@@ -46,8 +48,8 @@ void Train::incrementTrain() {
 
 void startTrainThread(double startX, double startY, double dx, double dy, Position* position, int* signal, std::chrono::milliseconds tickTime, int numTicks) {
 
-    Train train(startX, startY, dx, dy, position, signal);
-    
+	Train train(startX, startY, dx, dy, position, signal);
+
 	for (int i = 0; i < numTicks; i++) {
 		train.incrementTrain();
 		std::this_thread::sleep_for(tickTime);

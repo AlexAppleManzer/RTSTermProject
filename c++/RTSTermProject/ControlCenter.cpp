@@ -4,6 +4,8 @@
 #include <chrono>
 #include <iostream>
 
+
+
 void ControlCenter::stopTrain(int train)
 {
 	signals->setTrainSignal(train, 2);
@@ -24,12 +26,29 @@ void ControlCenter::tick()
 		logTrainPos(pos.x, pos.y, pos.dx, pos.dy, i);
 	}
 
+	avoidCollision(predictionTicks);
+
 	std::cout << "Collision? " << detectCollision() << std::endl;
-	int nextCrash = detectCollision(simulate(1));
-	if (nextCrash != -1) {
-		stopTrain(nextCrash);
-	}
+
 	std::cout << std::endl;
+}
+
+void ControlCenter::avoidCollision(int ticks) {
+	// adapted from big brain python code.
+	for (int i = 1; i <= ticks; i++) {
+		Collision nextCrash = detectCollision(simulate(i));
+		if (nextCrash.collision == true) {
+			if (*(signals->getTrainSignal(nextCrash.train1)) == 0)
+			{
+				stopTrain(nextCrash.train2);
+			}
+			else
+			{
+				stopTrain(nextCrash.train1);
+			}
+			avoidCollision(ticks);
+		}
+	}
 }
 
 
@@ -66,7 +85,7 @@ bool ControlCenter::detectCollision() {
 	return false;
 }
 
-int ControlCenter::detectCollision(std::vector<Position> positions) {
+Collision ControlCenter::detectCollision(std::vector<Position> positions) {
 	// get point pairings (start and end of train)
 	Segments segments;
 	for (int i = 0; i < numTrains; i++) {
@@ -89,14 +108,11 @@ int ControlCenter::detectCollision(std::vector<Position> positions) {
 			Position endLine2 = segments.endSegmentPoints[j];
 
 			if (intersect(startLine1.x, startLine1.y, endLine1.x, endLine1.y, startLine2.x, startLine2.y, endLine2.x, endLine2.y)) {
-				//std::cout << i << ", " << j << std::endl;
-				//std::cout << endLine1.x << "," << endLine1.y << std::endl;
-				//std::cout << endLine2.x << "," << endLine2.y << std::endl;
-				return i;
+				return Collision(i, j);
 			}
 		}
 	}
-	return -1;
+	return Collision();
 }
 
 std::vector<Position> ControlCenter::simulate(int ticks)
@@ -105,6 +121,10 @@ std::vector<Position> ControlCenter::simulate(int ticks)
 	for (int i = 0; i < numTrains; i++) {
 		double dx = positions->operator[](i).dx;
 		double dy = positions->operator[](i).dy;
+		if (*(signals->getTrainSignal(i)) == 2) {
+			result.emplace_back(Position(positions->operator[](i).x, positions->operator[](i).y, dx, dy));
+			continue;
+		}
 		double newX = positions->operator[](i).x + ticks * dx;
 		double newY = positions->operator[](i).y + ticks * dy;
 		result.emplace_back(Position(newX, newY, dx, dy));

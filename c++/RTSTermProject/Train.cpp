@@ -3,6 +3,7 @@
 #include <assert.h>
 #include "Train.h"
 #include <iostream>
+#include <random>
 
 Train::Train(double startX, double startY, double dx, double dy, Position* position, int* signal) {
 	this->x = startX;
@@ -40,6 +41,17 @@ void Train::incrementTrain() {
 	case 1: // Slow down? (yellow light)
 		break;
 	case 2: // STOP (red light)
+		std::random_device rd;
+		std::mt19937 e2(rd());
+		std::uniform_real_distribution<> dist(0, 10);
+
+		if (dist(e2) > 9) // 10 percent chance of brake failure 
+		{
+			*signal = 0;
+			std::cout << "break failure!!!!" << std::endl;
+			incrementTrain();
+			break;
+		}
 		std::cout << "I'm stopped" << std::endl;
 		break;
 	}

@@ -9,7 +9,7 @@
 #include "Train.h"
 #include "ControlCenter.h"
 
-const static int trainCount = 5;
+const static int trainCount = 10;
 const static int totalTicks = 20;
 const static std::chrono::milliseconds tickTime = std::chrono::milliseconds(250);
 

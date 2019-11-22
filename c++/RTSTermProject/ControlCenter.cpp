@@ -3,6 +3,8 @@
 #include <thread>
 #include <chrono>
 #include <iostream>
+#include <json.h>
+#include <string>
 
 void ControlCenter::stopTrain(int train)
 {
@@ -19,9 +21,18 @@ ControlCenter::ControlCenter(TrainPositions* positions, Signals* signals, int nu
 void ControlCenter::tick()
 {
 	signals->resetTrainSignals();
+
+	//trainPos.clear();
+
 	for (int i = 0; i < numTrains; i++) {
 		Position pos = positions -> operator[](i);
 		logTrainPos(pos.x, pos.y, pos.dx, pos.dy, i);
+
+
+		//trainPos["x-pos"].append(pos.x);
+		//trainPos["y-pos"].append(pos.y);
+		//trainPos["dx-pos"].append(pos.dx);
+		//trainPos["dy-pos"].append(pos.dy);
 	}
 
 	std::cout << "Collision? " << detectCollision() << std::endl;

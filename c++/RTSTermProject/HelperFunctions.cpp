@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cmath>
 #include "HelperFunctions.h"
+#include <json.h>
+
 
 void logTrainPos(double x, double y, double dx, double dy, int train)
 {

@@ -2,6 +2,7 @@
 #include "Positions.h"
 #include "Signals.h"
 #include <chrono>
+#include <json.h>
 
 void startControlCenter(TrainPositions* positions, Signals* signals, std::chrono::milliseconds tickTime, int numTicks, int numTrains);
 
@@ -22,6 +23,7 @@ private:
 	TrainPositions* positions;
 	Signals* signals;
 	int numTrains;
+	//Json::Value trainPos;
 
 	// input train pos and output if collision occurs
 	// -1 = good anything else = bad

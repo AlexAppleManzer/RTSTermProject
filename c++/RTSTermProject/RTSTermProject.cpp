@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <random>
+#include <json.h>
 
 #include "Train.h"
 #include "ControlCenter.h"
@@ -35,8 +36,15 @@ int main()
 	// starts CC thread
 	std::thread readerThread(startControlCenter, &positions, &signals, tickTime, totalTicks, trainCount);
 
+	//Json::Value trainPos;
+
 	for (int i = 0; i < trainCount; i++) {
 		trainThreads[i]->join();
+
+		//trainPos["x-pos"].append(positions[i].x);
+		//trainPos["y-pos"].append(positions[i].y);
+		//trainPos["dx-pos"].append(positions[i].dx);	Testing JSON file creation
+		//trainPos["dy-pos"].append(positions[i].dy);
 	}
 	readerThread.join();
 	return 0;

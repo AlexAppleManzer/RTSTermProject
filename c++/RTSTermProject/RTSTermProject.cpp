@@ -13,6 +13,11 @@ const static int trainCount = 10;
 const static int totalTicks = 20;
 const static std::chrono::milliseconds tickTime = std::chrono::milliseconds(250);
 
+//Json::Value createJSONTrainPos(double position)
+//{
+//
+//}
+
 int main()
 {
 	std::random_device rd;
@@ -36,16 +41,19 @@ int main()
 	// starts CC thread
 	std::thread readerThread(startControlCenter, &positions, &signals, tickTime, totalTicks, trainCount);
 
-	//Json::Value trainPos;
+	Json::Value trainPos;
 
 	for (int i = 0; i < trainCount; i++) {
 		trainThreads[i]->join();
 
-		//trainPos["x-pos"].append(positions[i].x);
-		//trainPos["y-pos"].append(positions[i].y);
-		//trainPos["dx-pos"].append(positions[i].dx);	Testing JSON file creation
-		//trainPos["dy-pos"].append(positions[i].dy);
+		trainPos[i]["x-pos"].append(positions[i].x);
+		trainPos[i]["y-pos"].append(positions[i].y);
+		trainPos[i]["dx-pos"].append(positions[i].dx);
+		trainPos[i]["dy-pos"].append(positions[i].dy);
 	}
+
 	readerThread.join();
+
+	std::cout << trainPos;
 	return 0;
 }
